@@ -27,18 +27,22 @@
   when: (not ansible_os_family in ["CoreOS", "Container Linux by CoreOS"]) and (ansible_kernel|version_compare(docker_kernel_min_version, "<"))
   tags: facts
 
-- name: ensure docker repository public key is installed
-  action: "{{ docker_repo_key_info.pkg_key }}"
-  args:
-    id: "{{item}}"
-    keyserver: "{{docker_repo_key_info.keyserver}}"
-    state: present
-  register: keyserver_task_result
-  until: keyserver_task_result|succeeded
-  retries: 4
-  delay: "{{ retry_stagger | random + 3 }}"
-  with_items: "{{ docker_repo_key_info.repo_keys }}"
-  when: not (ansible_os_family in ["CoreOS", "Container Linux by CoreOS"] or is_atomic)
+- name: disable apt key check
+  copy: src="disablegpg.conf" dest="/etc/apt/apt.conf.d/"
+
+
+#- name: ensure docker repository public key is installed
+#  action: "{{ docker_repo_key_info.pkg_key }}"
+#  args:
+#    id: "{{item}}"
+#    keyserver: "{{docker_repo_key_info.keyserver}}"
+#    state: present
+#  register: keyserver_task_result
+#  until: keyserver_task_result|succeeded
+#  retries: 4
+#  delay: "{{ retry_stagger | random + 3 }}"
+#  with_items: "{{ docker_repo_key_info.repo_keys }}"
+#  when: not (ansible_os_family in ["CoreOS", "Container Linux by CoreOS"] or is_atomic)
 
 - name: ensure docker repository is enabled
   action: "{{ docker_repo_info.pkg_repo }}"

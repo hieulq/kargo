@@ -66,9 +66,9 @@
 #azure_route_table_name:
 
 ## Set these proxy values in order to update docker daemon to use proxies
-#http_proxy: ""
-#https_proxy: ""
-#no_proxy: ""
+http_proxy: "http://10.164.177.170:8080"
+https_proxy: "http://10.164.177.170:8080"
+no_proxy: "localhost,10.0.0.0/8"
 
 ## Uncomment this if you want to force overlay/overlay2 as docker storage driver
 ## Please note that overlay2 is only supported on newer kernels
